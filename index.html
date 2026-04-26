@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Damola's Kingdom Blueprint v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #F0D080;
+  --cream: #F9F4EB;
+  --deep: #1A1208;
+  --brown: #3D2B0E;
+  --forest: #1E3A2F;
+  --forest-light: #2D5544;
+  --ember: #C0431A;
+  --sky: #1A4D6E;
+  --text: #2C1D06;
+  --muted: #8A7356;
+  --card: #FFFDF6;
+  --border: rgba(201,168,76,0.25);
+  --purple: #4A2D6E;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
+
+/* HEADER */
+.header{background:var(–deep);padding:24px 28px 20px;position:relative;overflow:hidden;}
+.header::after{content:’’;position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(–gold),var(–gold-light),var(–gold),transparent);}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;}
+.brand{font-family:‘Cinzel’,serif;color:var(–gold);font-size:10px;letter-spacing:4px;text-transform:uppercase;margin-bottom:5px;}
+.header h1{font-family:‘Playfair Display’,serif;color:var(–cream);font-size:clamp(20px,4vw,32px);font-weight:400;line-height:1.2;}
+.header h1 span{color:var(–gold);font-style:italic;}
+.date-badge{background:rgba(201,168,76,0.15);border:1px solid var(–border);color:var(–gold-light);padding:7px 14px;border-radius:4px;font-size:12px;font-weight:500;white-space:nowrap;}
+.streak-row{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;}
+.streak-chip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:100px;padding:5px 13px;color:var(–cream);font-size:12px;cursor:pointer;transition:all 0.2s;}
+.streak-chip:hover{background:rgba(201,168,76,0.1);}
+.streak-num{color:var(–gold);font-weight:600;}
+
+/* TABS */
+.tabs{display:flex;background:var(–brown);padding:0 20px;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:13px 16px;font-size:12px;font-weight:500;color:rgba(249,244,235,0.5);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;letter-spacing:0.3px;}
+.tab:hover{color:var(–cream);}
+.tab.active{color:var(–gold);border-bottom-color:var(–gold);}
+
+/* CONTENT */
+.content{padding:24px 20px;max-width:980px;margin:0 auto;position:relative;z-index:1;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* CARDS */
+.card{background:var(–card);border:1px solid var(–border);border-radius:12px;padding:22px;margin-bottom:18px;box-shadow:0 2px 20px rgba(26,18,8,0.06);position:relative;overflow:hidden;}
+.card::before{content:’’;position:absolute;top:0;left:0;width:4px;height:100%;background:var(–gold);border-radius:12px 0 0 12px;}
+.card.forest::before{background:var(–forest-light);}
+.card.ember::before{background:var(–ember);}
+.card.sky::before{background:var(–sky);}
+.card.purple::before{background:var(–purple);}
+.card-title{font-family:‘Cinzel’,serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(–muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.card-title::after{content:’’;flex:1;height:1px;background:var(–border);}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:500px){.grid-3{grid-template-columns:1fr;}}
+
+/* STAT BOX */
+.stat-box{text-align:center;padding:14px 10px;border:1px solid var(–border);border-radius:10px;background:var(–cream);}
+.stat-label{font-size:10px;color:var(–muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.stat-val{font-family:‘Playfair Display’,serif;font-size:20px;font-weight:700;}
+.stat-val.green{color:var(–forest-light);}
+.stat-val.red{color:var(–ember);}
+.stat-val.gold{color:var(–gold);}
+.stat-val.sky{color:var(–sky);}
+
+/* INPUTS */
+.input-group{display:flex;flex-direction:column;gap:5px;}
+.input-label{font-size:11px;color:var(–muted);font-weight:500;}
+.input-field{background:var(–cream);border:1px solid var(–border);border-radius:6px;padding:10px 12px;font-family:‘DM Sans’,sans-serif;font-size:13px;color:var(–text);outline:none;transition:border-color 0.2s;width:100%;}
+.input-field:focus{border-color:var(–gold);}
+.textarea-field{background:var(–cream);border:1px solid var(–border);border-radius:8px;padding:12px;font-family:‘DM Sans’,sans-serif;font-size:13px;color:var(–text);resize:vertical;min-height:90px;outline:none;transition:border-color 0.2s;width:100%;}
+.textarea-field:focus{border-color:var(–gold);}
+.textarea-field::placeholder,.input-field::placeholder{color:var(–muted);}
+
+/* BUTTONS */
+.btn{padding:9px 17px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;font-family:‘DM Sans’,sans-serif;}
+.btn-gold{background:var(–gold);color:var(–deep);}
+.btn-gold:hover{background:var(–gold-light);}
+.btn-outline{background:transparent;border:1px solid var(–border);color:var(–text);}
+.btn-outline:hover{border-color:var(–gold);color:var(–gold);}
+.btn-forest{background:var(–forest);color:var(–cream);}
+.btn-forest:hover{background:var(–forest-light);}
+.btn-sky{background:var(–sky);color:var(–cream);}
+.btn-danger{background:transparent;border:1px solid rgba(192,67,26,0.3);color:var(–ember);font-size:12px;}
+.btn-danger:hover{background:rgba(192,67,26,0.08);}
+.btn-sm{padding:6px 12px;font-size:11px;}
+
+/* VERSE */
+.verse-text{font-family:‘Playfair Display’,serif;font-size:clamp(15px,2.5vw,20px);line-height:1.65;color:var(–deep);font-style:italic;margin-bottom:10px;}
+.verse-ref{color:var(–gold);font-weight:600;font-size:13px;}
+
+/* PRAYER */
+.prayer-entry{background:linear-gradient(135deg,rgba(201,168,76,0.06),transparent);border:1px solid var(–border);border-radius:8px;padding:12px 14px;margin-bottom:9px;}
+.prayer-date{font-size:10px;color:var(–muted);margin-bottom:5px;}
+.prayer-body{font-size:13px;line-height:1.6;color:var(–text);}
+
+/* CHECKLIST */
+.check-list{list-style:none;}
+.check-item{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid rgba(201,168,76,0.1);cursor:pointer;transition:opacity 0.2s;}
+.check-item:last-child{border-bottom:none;}
+.check-item.done{opacity:0.4;text-decoration:line-through;}
+.check-box{width:19px;height:19px;border:2px solid var(–border);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:11px;}
+.check-item.done .check-box{background:var(–gold);border-color:var(–gold);color:white;}
+.check-label{font-size:13px;flex:1;}
+.check-cat{font-size:10px;padding:2px 7px;border-radius:100px;}
+.check-cat.faith{background:rgba(30,58,47,0.1);color:var(–forest-light);}
+.check-cat.finance{background:rgba(26,77,110,0.1);color:var(–sky);}
+.check-cat.biz{background:rgba(192,67,26,0.1);color:var(–ember);}
+.check-cat.data{background:rgba(74,45,110,0.1);color:var(–purple);}
+
+/* PROGRESS BAR */
+.prog-wrap{background:var(–cream);border-radius:100px;height:10px;margin:8px 0 4px;overflow:hidden;border:1px solid var(–border);}
+.prog-fill{height:100%;border-radius:100px;transition:width 0.5s ease;}
+.prog-fill.gold{background:linear-gradient(90deg,var(–forest),var(–gold));}
+.prog-fill.sky{background:linear-gradient(90deg,var(–sky),var(–gold-light));}
+.prog-fill.purple{background:linear-gradient(90deg,var(–purple),#8B5CF6);}
+.prog-info{display:flex;justify-content:space-between;font-size:11px;color:var(–muted);}
+
+/* TRANSACTION */
+.fin-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:18px;align-items:end;}
+@media(max-width:520px){.fin-form{grid-template-columns:1fr;}}
+.tx-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(201,168,76,0.08);font-size:13px;}
+.tx-label{color:var(–text);}
+.tx-meta{font-size:10px;color:var(–muted);}
+.tx-amount{font-weight:600;}
+.tx-amount.inc{color:var(–forest-light);}
+.tx-amount.exp{color:var(–ember);}
+
+/* 30-DAY SPEND */
+.spend-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0;}
+.spend-day{aspect-ratio:1;border-radius:4px;border:1px solid var(–border);display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;transition:all 0.2s;background:var(–cream);color:var(–muted);flex-direction:column;gap:1px;}
+.spend-day:hover{border-color:var(–gold);}
+.spend-day.has-data{background:rgba(201,168,76,0.15);border-color:var(–gold);color:var(–deep);}
+.spend-day.today{border-color:var(–gold);border-width:2px;color:var(–gold);font-weight:600;}
+.spend-day .day-num{font-size:10px;font-weight:600;}
+.spend-day .day-amt{font-size:8px;}
+
+/* DEBT TRACKER */
+.debt-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(–border);border-radius:8px;margin-bottom:8px;background:var(–cream);}
+.debt-item.cleared{opacity:0.4;}
+.debt-name{flex:1;font-size:13px;}
+.debt-amt{font-weight:600;color:var(–ember);font-size:13px;}
+.debt-badge{font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(192,67,26,0.1);color:var(–ember);}
+.debt-badge.smallest{background:rgba(201,168,76,0.15);color:var(–gold);}
+
+/* SKILL ROADMAP */
+.skill-stage{border:1px solid var(–border);border-radius:10px;padding:16px;margin-bottom:12px;position:relative;}
+.skill-stage.active-stage{border-color:var(–gold);background:linear-gradient(135deg,rgba(201,168,76,0.06),transparent);}
+.skill-stage.done-stage{opacity:0.5;}
+.stage-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.stage-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.stage-badge.pending{background:var(–cream);border:2px solid var(–border);color:var(–muted);}
+.stage-badge.active{background:var(–gold);color:var(–deep);}
+.stage-badge.done{background:var(–forest);color:white;}
+.stage-title{font-weight:600;font-size:14px;}
+.stage-sub{font-size:11px;color:var(–muted);}
+
+/* REACHCARE */
+.rc-week{border:1px solid var(–border);border-radius:8px;margin-bottom:10px;overflow:hidden;}
+.rc-week-header{background:linear-gradient(135deg,rgba(26,77,110,0.08),transparent);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.rc-week-title{font-weight:600;font-size:13px;}
+.rc-week-body{padding:12px 14px;border-top:1px solid var(–border);display:none;}
+.rc-week-body.open{display:block;}
+.rc-win{font-size:13px;padding:6px 0;border-bottom:1px solid rgba(201,168,76,0.08);color:var(–text);}
+.rc-win:last-child{border-bottom:none;}
+
+/* VISION */
+.vision-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
+.vision-card{border:1px solid var(–border);border-radius:10px;padding:16px;background:var(–card);cursor:pointer;transition:all 0.2s;text-align:center;}
+.vision-card:hover{border-color:var(–gold);transform:translateY(-2px);box-shadow:0 6px 24px rgba(201,168,76,0.15);}
+.vision-card .vc-icon{font-size:28px;margin-bottom:8px;}
+.vision-card .vc-title{font-weight:600;font-size:13px;color:var(–deep);margin-bottom:5px;}
+.vision-card .vc-desc{font-size:11px;color:var(–muted);line-height:1.5;}
+.vision-card.achieved{border-color:var(–gold);background:linear-gradient(135deg,rgba(201,168,76,0.08),transparent);}
+.vision-card.achieved .vc-title::after{content:’ ✓’;color:var(–gold);}
+
+/* AFFIRMATION */
+.affirmation-box{background:linear-gradient(135deg,var(–deep),var(–brown));color:var(–cream);border-radius:12px;padding:22px;text-align:center;margin-bottom:18px;}
+.affirmation-box p{font-family:‘Playfair Display’,serif;font-size:clamp(14px,2.2vw,18px);line-height:1.65;font-style:italic;color:var(–gold-light);}
+.affirmation-box .scripture{font-size:11px;color:rgba(249,244,235,0.5);margin-top:8px;font-style:normal;}
+
+/* BREAKTHROUGH STEPS */
+.step-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.1);cursor:pointer;}
+.step-item:last-child{border-bottom:none;}
+.step-item.done-step .step-text{opacity:0.4;text-decoration:line-through;}
+.step-num{width:26px;height:26px;border-radius:50%;border:2px solid var(–border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;color:var(–muted);transition:all 0.2s;}
+.step-item.done-step .step-num{background:var(–gold);border-color:var(–gold);color:var(–deep);}
+.step-text{font-size:13px;line-height:1.5;flex:1;padding-top:4px;}
+.step-ref{font-size:10px;color:var(–gold);font-style:italic;}
+
+/* SCORE */
+.score-circle{width:130px;height:130px;position:relative;display:flex;align-items:center;justify-content:center;}
+.score-circle svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.score-val{font-family:‘Playfair Display’,serif;font-size:34px;font-weight:700;color:var(–gold);line-height:1;text-align:center;}
+.score-lbl{font-size:10px;color:var(–muted);text-align:center;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(26,18,8,0.75);z-index:100;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(–card);border:1px solid var(–border);border-radius:14px;padding:26px;width:100%;max-width:400px;}
+.modal h3{font-family:‘Playfair Display’,serif;font-size:19px;margin-bottom:14px;color:var(–deep);}
+.modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;}
+
+.empty{color:var(–muted);font-size:12px;text-align:center;padding:20px;font-style:italic;}
+.flex-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.mt-10{margin-top:10px;}
+.mt-14{margin-top:14px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.panel.active .card{animation:fadeUp 0.3s ease both;}
+.panel.active .card:nth-child(2){animation-delay:0.05s;}
+.panel.active .card:nth-child(3){animation-delay:0.1s;}
+.panel.active .card:nth-child(4){animation-delay:0.15s;}
+.panel.active .card:nth-child(5){animation-delay:0.2s;}
+
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500;}
+.tag-gold{background:rgba(201,168,76,0.15);color:var(–gold);}
+.tag-forest{background:rgba(30,58,47,0.1);color:var(–forest-light);}
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="brand">Kingdom Blueprint v2</div>
+      <h1>Damola's <span>Command Centre</span></h1>
+    </div>
+    <div class="date-badge" id="dateBadge"></div>
+  </div>
+  <div class="streak-row">
+    <div class="streak-chip" onclick="markCheckin()">🔥 Streak: <span class="streak-num" id="streakCount">0</span> days</div>
+    <div class="streak-chip">✝️ Faith: <span class="streak-num" id="faithStreak">0</span></div>
+    <div class="streak-chip">💰 Finance: <span class="streak-num" id="finStreak">0</span></div>
+    <div class="streak-chip">📊 Data: <span class="streak-num" id="dataStreak">0</span></div>
+  </div>
+</div>
+
+<!-- TABS -->
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('faith')">✝️ Faith</div>
+  <div class="tab" onclick="switchTab('daily')">☑️ Daily</div>
+  <div class="tab" onclick="switchTab('finance')">💰 Finance</div>
+  <div class="tab" onclick="switchTab('breakthrough')">🎯 Breakthrough</div>
+  <div class="tab" onclick="switchTab('skill')">📊 Data Skill</div>
+  <div class="tab" onclick="switchTab('reachcare')">🏥 ReachCare</div>
+  <div class="tab" onclick="switchTab('vision')">🚀 Vision</div>
+  <div class="tab" onclick="switchTab('score')">📈 Progress</div>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════ FAITH ═══════════════ -->
+
+<div class="panel active" id="panel-faith">
+  <div class="card">
+    <div class="card-title">📖 Today's Scripture</div>
+    <div class="verse-text" id="verseText"></div>
+    <div class="verse-ref" id="verseRef"></div>
+    <div class="flex-row mt-10">
+      <button class="btn btn-outline" onclick="nextVerse()">Next Verse →</button>
+      <button class="btn btn-forest" onclick="markVerseRead()">✓ Read Today</button>
+    </div>
+  </div>
+
+  <div class="card forest">
+    <div class="card-title">🙏 Prayer Journal</div>
+    <textarea class="textarea-field" id="prayerInput" placeholder="Write your prayer, thanksgiving, or requests here…"></textarea>
+    <div class="flex-row mt-10">
+      <button class="btn btn-forest" onclick="savePrayer()">Save Prayer</button>
+      <button class="btn btn-outline" onclick="document.getElementById('prayerInput').value=''">Clear</button>
+    </div>
+    <div id="prayerLog" style="margin-top:16px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🙌 Gratitude — 3 Things</div>
+    <div id="gratList" style="margin-bottom:12px;"></div>
+    <div class="flex-row">
+      <input class="input-field" id="gratInput" placeholder="I'm grateful for…" style="flex:1;min-width:160px;" onkeydown="if(event.key==='Enter')addGratitude()"/>
+      <button class="btn btn-gold" onclick="addGratitude()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DAILY ═══════════════ -->
+
+<div class="panel" id="panel-daily">
+  <div class="card">
+    <div class="card-title">☑️ Daily Habits</div>
+    <ul class="check-list" id="habitList"></ul>
+    <div class="flex-row mt-14">
+      <input class="input-field" id="habitInput" placeholder="Add habit…" style="flex:1;min-width:140px;" onkeydown="if(event.key==='Enter')addHabit()"/>
+      <select class="input-field" id="habitCat" style="width:100px;">
+        <option value="faith">Faith</option>
+        <option value="finance">Finance</option>
+        <option value="biz">Business</option>
+        <option value="data">Data Skill</option>
+        <option value="">General</option>
+      </select>
+      <button class="btn btn-gold" onclick="addHabit()">Add</button>
+    </div>
+  </div>
+
+  <div class="card sky">
+    <div class="card-title">🎯 Today's Top 3 Priorities</div>
+    <textarea class="textarea-field" id="focusInput" placeholder="What must happen before you sleep tonight?&#10;1.&#10;2.&#10;3." style="min-height:100px;"></textarea>
+    <button class="btn btn-sky mt-10" onclick="saveFocus()">Save</button>
+    <span id="focusSaved" style="font-size:11px;color:var(--muted);margin-left:10px;display:none;">✓ Saved!</span>
+  </div>
+</div>
+
+<!-- ═══════════════ FINANCE ═══════════════ -->
+
+<div class="panel" id="panel-finance">
+  <div class="grid-3">
+    <div class="stat-box"><div class="stat-label">Income</div><div class="stat-val green" id="totalInc">₦0</div></div>
+    <div class="stat-box"><div class="stat-label">Expenses</div><div class="stat-val red" id="totalExp">₦0</div></div>
+    <div class="stat-box"><div class="stat-label">Balance</div><div class="stat-val gold" id="totalBal">₦0</div></div>
+  </div>
+
+  <div class="card sky" style="margin-top:16px;">
+    <div class="card-title">💳 Log Transaction</div>
+    <div class="fin-form">
+      <div class="input-group">
+        <label class="input-label">Description</label>
+        <input class="input-field" id="txDesc" placeholder="e.g. Airtime, CAC client, Data…"/>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Amount (₦)</label>
+        <input class="input-field" id="txAmount" type="number" placeholder="0"/>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <label class="input-label">Type</label>
+        <div class="flex-row">
+          <button class="btn btn-forest" onclick="addTx('income')">+ In</button>
+          <button class="btn btn-danger" onclick="addTx('expense')">− Out</button>
+        </div>
+      </div>
+    </div>
+    <div id="txList"></div>
+  </div>
+
+  <!-- 30-DAY SPEND TRACKER -->
+
+  <div class="card">
+    <div class="card-title">📅 30-Day Spend Tracker</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">From your breakthrough notes: <em>"Write down everything I spend the next 30 days"</em></p>
+    <div class="spend-calendar" id="spendCalendar"></div>
+    <div id="spendDetail" style="margin-top:12px;padding:12px;background:var(--cream);border-radius:8px;border:1px solid var(--border);display:none;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;" id="spendDayLabel"></div>
+      <div class="flex-row">
+        <input class="input-field" id="spendDesc" placeholder="What did you spend on?" style="flex:1;"/>
+        <input class="input-field" id="spendAmt" type="number" placeholder="₦" style="width:90px;"/>
+        <button class="btn btn-gold btn-sm" onclick="saveSpend()">Save</button>
+      </div>
+      <div id="spendEntries" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- SAVINGS GOAL -->
+
+  <div class="card">
+    <div class="card-title">🎯 Savings Goal</div>
+    <div class="grid-2">
+      <div>
+        <div class="input-group" style="margin-bottom:10px;"><label class="input-label">Goal Name</label><input class="input-field" id="goalName" placeholder="e.g. Laptop Fund"/></div>
+        <div class="input-group" style="margin-bottom:10px;"><label class="input-label">Target (₦)</label><input class="input-field" id="goalTarget" type="number" placeholder="150000"/></div>
+        <div class="input-group" style="margin-bottom:10px;"><label class="input-label">Saved So Far (₦)</label><input class="input-field" id="goalSaved" type="number" placeholder="0"/></div>
+        <button class="btn btn-gold" onclick="updateGoal()">Update</button>
+      </div>
+      <div id="goalDisplay" style="display:flex;flex-direction:column;justify-content:center;"></div>
+    </div>
+  </div>
+
+  <!-- DEBT KILLER -->
+
+  <div class="card ember">
+    <div class="card-title">⚔️ Debt Killer — Smallest First</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">From your notes: <em>"List every debt, attack the smallest first"</em></p>
+    <div id="debtList"></div>
+    <div class="flex-row mt-10">
+      <input class="input-field" id="debtName" placeholder="Who/what do you owe?" style="flex:1;"/>
+      <input class="input-field" id="debtAmt" type="number" placeholder="₦" style="width:100px;"/>
+      <button class="btn btn-danger" onclick="addDebt()">Add Debt</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BREAKTHROUGH ═══════════════ -->
+
+<div class="panel" id="panel-breakthrough">
+  <div class="affirmation-box">
+    <p>"The plans of the diligent lead to profit. I am diligent. I am building. I will not stop."</p>
+    <div class="scripture">Proverbs 21:5 — "The plans of the diligent lead to profit as surely as haste leads to poverty."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 Steps to Financial Breakthrough</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Tap each step as you work through it. From your notebook this morning.</p>
+    <div id="breakthroughList"></div>
+  </div>
+
+  <div class="card forest">
+    <div class="card-title">💡 Financial Principle of the Day</div>
+    <div id="finPrinciple"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ DATA SKILL ═══════════════ -->
+
+<div class="panel" id="panel-skill">
+  <div class="card purple">
+    <div class="card-title">📊 Data Analysis Roadmap</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Your path: Excel → SQL → Python → Power BI → Portfolio → Income</p>
+
+```
+<div class="skill-stage done-stage" id="stage-excel">
+  <div class="stage-header">
+    <div class="stage-badge done">✓</div>
+    <div><div class="stage-title">Stage 1 — Excel</div><div class="stage-sub">Already doing this ✅</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill gold" style="width:70%"></div></div>
+  <div class="prog-info"><span>In progress</span><span>70%</span></div>
+  <ul class="check-list" id="excelChecks"></ul>
+</div>
+
+<div class="skill-stage active-stage" id="stage-sql">
+  <div class="stage-header">
+    <div class="stage-badge active">2</div>
+    <div><div class="stage-title">Stage 2 — SQL</div><div class="stage-sub">Current focus → W3Schools, SQLZoo</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill sky" id="sqlBar" style="width:0%"></div></div>
+  <div class="prog-info"><span id="sqlPct">0% complete</span><span>🎯 Active</span></div>
+  <ul class="check-list" id="sqlChecks"></ul>
+</div>
+
+<div class="skill-stage" id="stage-python">
+  <div class="stage-header">
+    <div class="stage-badge pending">3</div>
+    <div><div class="stage-title">Stage 3 — Python for Data</div><div class="stage-sub">pandas, matplotlib — unlock after SQL</div></div>
+  </div>
+  <ul class="check-list" id="pyChecks"></ul>
+</div>
+
+<div class="skill-stage" id="stage-powerbi">
+  <div class="stage-header">
+    <div class="stage-badge pending">4</div>
+    <div><div class="stage-title">Stage 4 — Power BI</div><div class="stage-sub">Visualization + Nigeria corporate relevance</div></div>
+  </div>
+  <ul class="check-list" id="biChecks"></ul>
+</div>
+
+<div class="skill-stage" id="stage-portfolio">
+  <div class="stage-header">
+    <div class="stage-badge pending">5</div>
+    <div><div class="stage-title">Stage 5 — Portfolio + Income</div><div class="stage-sub">First project → Upwork → ₦₦₦</div></div>
+  </div>
+  <ul class="check-list" id="portChecks"></ul>
+</div>
+```
+
+  </div>
+
+  <div class="card">
+    <div class="card-title">📝 Learning Notes</div>
+    <textarea class="textarea-field" id="skillNotes" placeholder="Write what you learned today about data analysis…" style="min-height:110px;"></textarea>
+    <button class="btn btn-gold mt-10" onclick="saveSkillNotes()">Save Notes</button>
+  </div>
+
+  <div class="card sky">
+    <div class="card-title">🏥 ReachCare × Data</div>
+    <p style="font-size:13px;line-height:1.7;color:var(--text);">Every skill you build in data analysis feeds directly into ReachCare. Think about it:</p>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:13px;display:flex;gap:8px;">📊 <span><strong>SQL</strong> → query patient records from your database</span></div>
+      <div style="font-size:13px;display:flex;gap:8px;">🐍 <span><strong>Python/pandas</strong> → clean and analyze CHW-collected health data</span></div>
+      <div style="font-size:13px;display:flex;gap:8px;">📈 <span><strong>Power BI</strong> → dashboard for supervisors to see trends</span></div>
+      <div style="font-size:13px;display:flex;gap:8px;">🎯 <span><strong>Your FYP</strong> → first real portfolio project combining all of this</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ REACHCARE ═══════════════ -->
+
+<div class="panel" id="panel-reachcare">
+  <div class="card sky">
+    <div class="card-title">🏥 ReachCare Weekly Wins</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+      <input class="input-field" id="rcWin" placeholder="What did you ship or move forward this week?" style="flex:1;min-width:200px;"/>
+      <button class="btn btn-sky" onclick="addRCWin()">Log Win</button>
+    </div>
+    <div id="rcWinList"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 ReachCare Components Status</div>
+    <ul class="check-list" id="rcComponents"></ul>
+  </div>
+
+  <div class="card forest">
+    <div class="card-title">🧠 This Week's ReachCare Focus</div>
+    <textarea class="textarea-field" id="rcFocus" placeholder="What is the ONE thing you want to move forward in ReachCare this week?"></textarea>
+    <button class="btn btn-forest mt-10" onclick="saveRCFocus()">Save Focus</button>
+    <span id="rcFocusSaved" style="font-size:11px;color:var(--muted);margin-left:10px;display:none;">✓ Saved!</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">👥 Key People</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:13px;display:flex;gap:10px;align-items:center;">👩‍⚕️ <div><strong>Vanessa</strong> — Co-founder & CMO (nursing student)</div></div>
+      <div style="font-size:13px;display:flex;gap:10px;align-items:center;">👨‍⚕️ <div><strong>Dr. Clinton</strong> — Potential clinical advisor</div></div>
+      <div style="font-size:13px;display:flex;gap:10px;align-items:center;">🤝 <div><strong>Bro Seun</strong> — Uncle & support</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ VISION ═══════════════ -->
+
+<div class="panel" id="panel-vision">
+  <div class="affirmation-box" id="affirmBox">
+    <p id="affirmText"></p>
+    <div class="scripture" id="affirmScripture"></div>
+  </div>
+
+  <div class="card ember">
+    <div class="card-title">🏆 My Big Dreams</div>
+    <div class="vision-grid" id="visionGrid"></div>
+    <button class="btn btn-outline mt-14" onclick="openVisionModal()">+ Add Dream</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📝 Entrepreneur's Thinking Space</div>
+    <textarea class="textarea-field" id="bizNotes" placeholder="Ideas, plans, contacts, observations, market insights… Let it flow." style="min-height:130px;"></textarea>
+    <button class="btn btn-gold mt-10" onclick="saveBizNotes()">Save Notes</button>
+  </div>
+</div>
+
+<!-- ═══════════════ PROGRESS ═══════════════ -->
+
+<div class="panel" id="panel-score">
+  <div class="card">
+    <div class="card-title">📈 Today's Consistency Score</div>
+    <div style="display:flex;justify-content:center;margin-bottom:18px;">
+      <div class="score-circle">
+        <svg width="130" height="130" viewBox="0 0 130 130">
+          <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="11"/>
+          <circle id="scoreArc" cx="65" cy="65" r="54" fill="none" stroke="url(#sg)" stroke-width="11" stroke-linecap="round" stroke-dasharray="339" stroke-dashoffset="339"/>
+          <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#1E3A2F"/><stop offset="100%" stop-color="#C9A84C"/></linearGradient></defs>
+        </svg>
+        <div><div class="score-val" id="scoreVal">0%</div><div class="score-lbl">Today</div></div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="stat-box"><div class="stat-label">Habits</div><div class="stat-val gold" id="habitsDone">0/0</div></div>
+      <div class="stat-box"><div class="stat-label">Faith</div><div class="stat-val gold" id="faithDone">0/0</div></div>
+      <div class="stat-box"><div class="stat-label">Data Skill</div><div class="stat-val sky" id="dataDone">0/0</div></div>
+    </div>
+  </div>
+
+  <div class="card forest">
+    <div class="card-title">💡 Damola's Non-Negotiables</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:13px;display:flex;gap:10px;">✝️ <span>Faith first. Devotion before Twitter, Instagram, anything.</span></div>
+      <div style="font-size:13px;display:flex;gap:10px;">📊 <span>Data skill = 30 mins daily minimum. Even on bad days.</span></div>
+      <div style="font-size:13px;display:flex;gap:10px;">💰 <span>Log every naira. You can't grow what you don't measure.</span></div>
+      <div style="font-size:13px;display:flex;gap:10px;">🏥 <span>ReachCare gets at least 1 forward step every week. No exceptions.</span></div>
+      <div style="font-size:13px;display:flex;gap:10px;">🎓 <span>FYP is your brand statement. Treat it like a product launch.</span></div>
+      <div style="font-size:13px;display:flex;gap:10px;">💼 <span>DANNIT: 1 quality client per week until after graduation.</span></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<!-- VISION MODAL -->
+
+<div class="modal-bg" id="visionModal">
+  <div class="modal">
+    <h3>Add a Dream</h3>
+    <div class="input-group" style="margin-bottom:10px;"><label class="input-label">Title</label><input class="input-field" id="vGoalTitle" placeholder="e.g. Own my first company"/></div>
+    <div class="input-group" style="margin-bottom:10px;"><label class="input-label">Emoji Icon</label><input class="input-field" id="vGoalIcon" placeholder="🏢" maxlength="4"/></div>
+    <div class="input-group"><label class="input-label">What this means to you</label><input class="input-field" id="vGoalDesc" placeholder="Brief description…"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeVisionModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveVision()">Add Dream</button>
+    </div>
+  </div>
+</div>
+
+<!-- SPEND DAY MODAL -->
+
+<div class="modal-bg" id="spendModal">
+  <div class="modal">
+    <h3 id="spendModalTitle">Day Spending</h3>
+    <div id="spendModalEntries" style="margin-bottom:14px;max-height:200px;overflow-y:auto;"></div>
+    <div class="input-group" style="margin-bottom:10px;"><label class="input-label">Add expense</label><input class="input-field" id="spendModalDesc" placeholder="What did you spend on?"/></div>
+    <div class="input-group" style="margin-bottom:10px;"><label class="input-label">Amount (₦)</label><input class="input-field" id="spendModalAmt" type="number" placeholder="0"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeSpendModal()">Done</button>
+      <button class="btn btn-gold" onclick="saveSpendEntry()">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── HELPERS ───
+const S = {
+  get: (k,d) => { try { const v=localStorage.getItem(k); return v?JSON.parse(v):d; } catch { return d; } },
+  set: (k,v) => localStorage.setItem(k,JSON.stringify(v))
+};
+
+// ─── DATA ───
+let prayers   = S.get('prayers',[]);
+let habits    = S.get('habits',[
+  {id:1,label:'Morning Devotion / Bible Reading',cat:'faith',done:false},
+  {id:2,label:'Prayer (at least 10 mins)',cat:'faith',done:false},
+  {id:3,label:'Log a financial transaction',cat:'finance',done:false},
+  {id:4,label:'30 mins SQL practice today',cat:'data',done:false},
+  {id:5,label:'Work on FYP / EKSU project',cat:'biz',done:false},
+  {id:6,label:'Move ReachCare 1 step forward',cat:'biz',done:false},
+  {id:7,label:'1 DANNIT/client task done',cat:'biz',done:false},
+  {id:8,label:'Track every spend today',cat:'finance',done:false},
+]);
+let gratitude = S.get('gratitude',[]);
+let txList    = S.get('txList',[]);
+let goals     = S.get('goals',{name:'Laptop Fund',target:150000,saved:30000});
+let debts     = S.get('debts',[]);
+let visions   = S.get('visions',[
+  {id:1,icon:'🏢',title:'Own my company',desc:'Registered, profitable, making impact.',done:false},
+  {id:2,icon:'💻',title:'Ship ReachCare',desc:'CHW app used by real health workers.',done:false},
+  {id:3,icon:'🎓',title:'Graduate strong',desc:'End 400L with distinction.',done:false},
+  {id:4,icon:'💸',title:'First ₦100k month',desc:'From my own business.',done:false},
+  {id:5,icon:'🌍',title:'Hire first employee',desc:'Create a job for someone else.',done:false},
+  {id:6,icon:'❤️',title:'Build life with Mofe',desc:'Faith, finances, future — together.',done:false},
+  {id:7,icon:'📊',title:'Paid data analyst',desc:'First paid data project.',done:false},
+]);
+let streakData  = S.get('streakData',{streak:0,faithStreak:0,finStreak:0,dataStreak:0,lastDate:''});
+let bizNotes    = S.get('bizNotes','');
+let focusText   = S.get('focusText','');
+let skillNotes  = S.get('skillNotes','');
+let spendData   = S.get('spendData',{});   // { "day-index": [{desc,amt}] }
+let spendStart  = S.get('spendStart', null);
+let activeSpendDay = null;
+let rcWins      = S.get('rcWins',[]);
+let rcFocus     = S.get('rcFocus','');
+let rcComponents = S.get('rcComponents',[
+  {id:1,label:'Landing page (reach-care.vercel.app)',done:true},
+  {id:2,label:'CHW Mobile Web App',done:true},
+  {id:3,label:'Supervisor Dashboard',done:true},
+  {id:4,label:'Admin Panel',done:true},
+  {id:5,label:'Node.js/Express/SQLite Backend',done:true},
+  {id:6,label:'Railway deployment (backend)',done:false},
+  {id:7,label:'Data analysis dashboard for supervisors',done:false},
+  {id:8,label:'Clinical advisor (Dr. Clinton) confirmed',done:false},
+  {id:9,label:'First real CHW user onboarded',done:false},
+]);
+
+let breakthroughSteps = S.get('breakthroughSteps',[
+  {id:1,text:'Pick one skill the market will pay for',ref:'',done:false},
+  {id:2,text:'Get up and work like an ant',ref:'',done:false},
+  {id:3,text:'Count the cost before you build',ref:'Proverbs 21:5',done:false},
+  {id:4,text:'Write down everything I spend for the next 30 days',ref:'Deuteronomy 20',done:false},
+  {id:5,text:'Kill debt before it kills the future',ref:'',done:false},
+  {id:6,text:'List every debt, attack the smallest first',ref:'',done:false},
+  {id:7,text:'Gather little and let it multiply',ref:'',done:false},
+  {id:8,text:'Spread portion — invest across seven ventures',ref:'Ecclesiastes 11:2',done:false},
+  {id:9,text:'Guard your walls or lose everything you built',ref:'',done:false},
+  {id:10,text:'Walk with the wise and stop walking with fools',ref:'Proverbs 13:20',done:false},
+  {id:11,text:'Build with clean hands or let it crumble',ref:'',done:false},
+]);
+
+const skillChecks = S.get('skillChecks', {
+  excel: [
+    {id:'e1',label:'Pivot tables — group and summarize data',done:true},
+    {id:'e2',label:'VLOOKUP / XLOOKUP',done:false},
+    {id:'e3',label:'Charts & visualizations',done:false},
+    {id:'e4',label:'Data cleaning (remove duplicates, trim, etc.)',done:false},
+    {id:'e5',label:'First portfolio project in Excel',done:false},
+  ],
+  sql: [
+    {id:'s1',label:'SELECT, WHERE, ORDER BY basics',done:false},
+    {id:'s2',label:'JOIN (INNER, LEFT, RIGHT)',done:false},
+    {id:'s3',label:'GROUP BY and aggregate functions',done:false},
+    {id:'s4',label:'Subqueries',done:false},
+    {id:'s5',label:'Create + query a real health dataset',done:false},
+  ],
+  python: [
+    {id:'p1',label:'Python basics (variables, loops, functions)',done:false},
+    {id:'p2',label:'pandas — load and clean data',done:false},
+    {id:'p3',label:'matplotlib — make charts',done:false},
+    {id:'p4',label:'Analyze a real Nigerian dataset',done:false},
+  ],
+  powerbi: [
+    {id:'b1',label:'Import data and build first report',done:false},
+    {id:'b2',label:'DAX basics',done:false},
+    {id:'b3',label:'Interactive dashboard',done:false},
+    {id:'b4',label:'Publish and share a report',done:false},
+  ],
+  portfolio: [
+    {id:'pt1',label:'Health data analysis project (ties to ReachCare)',done:false},
+    {id:'pt2',label:'Nigerian economic/NCDC data project',done:false},
+    {id:'pt3',label:'Upwork profile created',done:false},
+    {id:'pt4',label:'First paid data project',done:false},
+  ]
+});
+
+const VERSES = [
+  {text:'"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future."',ref:'Jeremiah 29:11'},
+  {text:'"Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight."',ref:'Proverbs 3:5-6'},
+  {text:'"I can do all this through him who gives me strength."',ref:'Philippians 4:13'},
+  {text:'"Commit to the Lord whatever you do, and he will establish your plans."',ref:'Proverbs 16:3'},
+  {text:'"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."',ref:'Joshua 1:9'},
+  {text:'"But seek first his kingdom and his righteousness, and all these things will be given to you as well."',ref:'Matthew 6:33'},
+  {text:'"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters."',ref:'Colossians 3:23'},
+  {text:'"The plans of the diligent lead to profit as surely as haste leads to poverty."',ref:'Proverbs 21:5'},
+  {text:'"Now to him who is able to do immeasurably more than all we ask or imagine, according to his power that is at work within us."',ref:'Ephesians 3:20'},
+  {text:'"Lazy hands make for poverty, but diligent hands bring wealth."',ref:'Proverbs 10:4'},
+];
+const AFFIRMATIONS = [
+  {text:'"I am a builder. God has given me the ideas, the hands, and the time. I will not waste this season."',ref:'Philippians 4:13'},
+  {text:'"Every small step I take today is seed. I\'m planting for a harvest I deserve to see."',ref:'Galatians 6:9'},
+  {text:'"I graduate with more than a certificate — I graduate with a business, a skill, and a purpose."',ref:'Jeremiah 29:11'},
+  {text:'"I track my money because I respect it. Money flows toward those who respect it."',ref:'Luke 16:10'},
+  {text:'"ReachCare is not just a startup. It is lives saved. I build it faithfully."',ref:'Colossians 3:23'},
+];
+const FIN_PRINCIPLES = [
+  '"Pick one skill the market will pay for — then become undeniable at it."',
+  '"Write down everything you spend. Awareness is the first form of control."',
+  '"Kill debt before it kills the future. The borrower is servant to the lender." — Proverbs 22:7',
+  '"Gather little and let it multiply. Consistency beats intensity."',
+  '"Guard your walls. Not everyone deserves access to your process and plans."',
+  '"Walk with the wise and grow wise. Your network is your net worth."',
+  '"Build with clean hands — integrity in business is long-term strategy, not weakness."',
+  '"Invest across seven ventures. Don\'t bet everything on one stream." — Ecclesiastes 11:2',
+];
+
+let verseIdx = 0;
+
+// ─── INIT ───
+window.onload = () => {
+  const now = new Date();
+  document.getElementById('dateBadge').textContent = now.toLocaleDateString('en-NG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('streakCount').textContent = streakData.streak;
+  document.getElementById('faithStreak').textContent = streakData.faithStreak;
+  document.getElementById('finStreak').textContent = streakData.finStreak;
+  document.getElementById('dataStreak').textContent = streakData.dataStreak||0;
+
+  verseIdx = now.getDate() % VERSES.length;
+  renderVerse();
+  renderPrayers();
+  renderGratitude();
+  renderHabits();
+  renderTx();
+  updateFinStats();
+  renderGoal();
+  renderDebts();
+  renderBreakthrough();
+  renderSkillChecks();
+  renderVisions();
+  renderRCWins();
+  renderRCComponents();
+  renderSpendCalendar();
+  renderScore();
+
+  const ai = now.getDate() % AFFIRMATIONS.length;
+  document.getElementById('affirmText').textContent = AFFIRMATIONS[ai].text;
+  document.getElementById('affirmScripture').textContent = AFFIRMATIONS[ai].ref;
+
+  const fi = now.getDate() % FIN_PRINCIPLES.length;
+  document.getElementById('finPrinciple').innerHTML = `<p style="font-family:'Playfair Display',serif;font-size:16px;font-style:italic;line-height:1.65;color:var(--deep);">${FIN_PRINCIPLES[fi]}</p>`;
+
+  document.getElementById('bizNotes').value = bizNotes;
+  document.getElementById('focusInput').value = focusText;
+  document.getElementById('skillNotes').value = skillNotes;
+  document.getElementById('rcFocus').value = rcFocus;
+
+  if (!spendStart) { spendStart = now.toISOString(); S.set('spendStart', spendStart); }
+};
+
+// ─── TABS ───
+function switchTab(tab) {
+  const tabs = ['faith','daily','finance','breakthrough','skill','reachcare','vision','score'];
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tabs[i]===tab));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+// ─── FAITH ───
+function renderVerse() {
+  const v = VERSES[verseIdx];
+  document.getElementById('verseText').textContent = v.text;
+  document.getElementById('verseRef').textContent = '— '+v.ref;
+}
+function nextVerse() { verseIdx=(verseIdx+1)%VERSES.length; renderVerse(); }
+function markVerseRead() {
+  streakData.faithStreak=(streakData.faithStreak||0)+1;
+  S.set('streakData',streakData);
+  document.getElementById('faithStreak').textContent=streakData.faithStreak;
+}
+function savePrayer() {
+  const txt=document.getElementById('prayerInput').value.trim();
+  if(!txt)return;
+  prayers.unshift({text:txt,date:new Date().toLocaleString('en-NG')});
+  S.set('prayers',prayers);
+  document.getElementById('prayerInput').value='';
+  renderPrayers();
+}
+function renderPrayers() {
+  const el=document.getElementById('prayerLog');
+  if(!prayers.length){el.innerHTML='<div class="empty">Your prayers will appear here.</div>';return;}
+  el.innerHTML=prayers.slice(0,5).map(p=>`<div class="prayer-entry"><div class="prayer-date">🙏 ${p.date}</div><div class="prayer-body">${p.text}</div></div>`).join('');
+}
+function addGratitude() {
+  const txt=document.getElementById('gratInput').value.trim();
+  if(!txt)return;
+  if(gratitude.length>=3)gratitude.shift();
+  gratitude.push(txt);
+  S.set('gratitude',gratitude);
+  document.getElementById('gratInput').value='';
+  renderGratitude();
+}
+function renderGratitude() {
+  const el=document.getElementById('gratList');
+  if(!gratitude.length){el.innerHTML='<div class="empty">Write 3 things you\'re grateful for today.</div>';return;}
+  el.innerHTML=gratitude.map((g,i)=>`<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--gold);font-weight:700;">${i+1}.</span> ${g}</div>`).join('');
+}
+
+// ─── HABITS ───
+function renderHabits() {
+  const el=document.getElementById('habitList');
+  if(!habits.length){el.innerHTML='<div class="empty">No habits yet.</div>';return;}
+  el.innerHTML=habits.map(h=>`<li class="check-item ${h.done?'done':''}" onclick="toggleHabit(${h.id})"><div class="check-box">${h.done?'✓':''}</div><span class="check-label">${h.label}</span>${h.cat?`<span class="check-cat ${h.cat}">${h.cat}</span>`:''}</li>`).join('');
+}
+function toggleHabit(id) {
+  const h=habits.find(x=>x.id===id); if(h)h.done=!h.done;
+  S.set('habits',habits); renderHabits(); renderScore();
+}
+function addHabit() {
+  const label=document.getElementById('habitInput').value.trim();
+  const cat=document.getElementById('habitCat').value;
+  if(!label)return;
+  habits.push({id:Date.now(),label,cat,done:false});
+  S.set('habits',habits);
+  document.getElementById('habitInput').value='';
+  renderHabits();
+}
+function saveFocus() {
+  focusText=document.getElementById('focusInput').value;
+  S.set('focusText',focusText);
+  const el=document.getElementById('focusSaved');
+  el.style.display='inline'; setTimeout(()=>el.style.display='none',2000);
+}
+
+// ─── FINANCE ───
+function addTx(type) {
+  const desc=document.getElementById('txDesc').value.trim();
+  const amt=parseFloat(document.getElementById('txAmount').value);
+  if(!desc||isNaN(amt)||amt<=0)return;
+  txList.unshift({desc,amt,type,date:new Date().toLocaleDateString('en-NG')});
+  S.set('txList',txList);
+  document.getElementById('txDesc').value='';
+  document.getElementById('txAmount').value='';
+  renderTx(); updateFinStats();
+}
+function renderTx() {
+  const el=document.getElementById('txList');
+  if(!txList.length){el.innerHTML='<div class="empty">No transactions yet.</div>';return;}
+  el.innerHTML=txList.slice(0,8).map(t=>`<div class="tx-item"><div><div class="tx-label">${t.desc}</div><div class="tx-meta">${t.date}</div></div><div class="tx-amount ${t.type==='income'?'inc':'exp'}">${t.type==='income'?'+':'-'}₦${t.amt.toLocaleString()}</div></div>`).join('');
+}
+function updateFinStats() {
+  const inc=txList.filter(t=>t.type==='income').reduce((a,b)=>a+b.amt,0);
+  const exp=txList.filter(t=>t.type==='expense').reduce((a,b)=>a+b.amt,0);
+  document.getElementById('totalInc').textContent='₦'+inc.toLocaleString();
+  document.getElementById('totalExp').textContent='₦'+exp.toLocaleString();
+  const bal=inc-exp;
+  const balEl=document.getElementById('totalBal');
+  balEl.textContent='₦'+Math.abs(bal).toLocaleString();
+  balEl.className='stat-val '+(bal>=0?'green':'red');
+}
+function updateGoal() {
+  goals.name=document.getElementById('goalName').value||goals.name;
+  goals.target=parseFloat(document.getElementById('goalTarget').value)||goals.target;
+  goals.saved=parseFloat(document.getElementById('goalSaved').value)||goals.saved;
+  S.set('goals',goals); renderGoal();
+}
+function renderGoal() {
+  const pct=Math.min(100,Math.round((goals.saved/goals.target)*100));
+  document.getElementById('goalName').value=goals.name;
+  document.getElementById('goalTarget').value=goals.target;
+  document.getElementById('goalSaved').value=goals.saved;
+  document.getElementById('goalDisplay').innerHTML=`<div style="font-weight:600;font-size:14px;color:var(--deep);margin-bottom:6px;">${goals.name}</div><div class="prog-wrap"><div class="prog-fill gold" style="width:${pct}%"></div></div><div class="prog-info"><span>₦${goals.saved.toLocaleString()}</span><span>${pct}% of ₦${goals.target.toLocaleString()}</span></div>`;
+}
+
+// DEBT
+function addDebt() {
+  const name=document.getElementById('debtName').value.trim();
+  const amt=parseFloat(document.getElementById('debtAmt').value);
+  if(!name||isNaN(amt)||amt<=0)return;
+  debts.push({id:Date.now(),name,amt,cleared:false});
+  S.set('debts',debts);
+  document.getElementById('debtName').value=''; document.getElementById('debtAmt').value='';
+  renderDebts();
+}
+function renderDebts() {
+  const el=document.getElementById('debtList');
+  if(!debts.length){el.innerHTML='<div class="empty">No debts logged. If you have any, face them here.</div>';return;}
+  const sorted=[...debts].filter(d=>!d.cleared).sort((a,b)=>a.amt-b.amt);
+  const cleared=debts.filter(d=>d.cleared);
+  const all=[...sorted,...cleared];
+  el.innerHTML=all.map((d,i)=>`<div class="debt-item ${d.cleared?'cleared':''}" onclick="toggleDebt(${d.id})">
+    <div class="debt-name">${d.name}</div>
+    ${i===0&&!d.cleared?'<span class="debt-badge smallest">Attack this first</span>':''}
+    <div class="debt-amt">${d.cleared?'<span style="color:var(--forest-light)">✓ Cleared</span>':'₦'+d.amt.toLocaleString()}</div>
+  </div>`).join('');
+}
+function toggleDebt(id) {
+  const d=debts.find(x=>x.id===id); if(d)d.cleared=!d.cleared;
+  S.set('debts',debts); renderDebts();
+}
+
+// 30-DAY SPEND
+function renderSpendCalendar() {
+  const el=document.getElementById('spendCalendar');
+  const start=spendStart?new Date(spendStart):new Date();
+  el.innerHTML='';
+  for(let i=0;i<30;i++){
+    const d=new Date(start); d.setDate(d.getDate()+i);
+    const key='day-'+i;
+    const entries=spendData[key]||[];
+    const total=entries.reduce((a,b)=>a+b.amt,0);
+    const isToday=d.toDateString()===new Date().toDateString();
+    const div=document.createElement('div');
+    div.className='spend-day'+(entries.length?' has-data':'')+(isToday?' today':'');
+    div.innerHTML=`<div class="day-num">${d.getDate()}</div>${total?'<div class="day-amt">₦'+formatK(total)+'</div>':''}`;
+    div.onclick=()=>openSpendModal(i,d);
+    el.appendChild(div);
+  }
+}
+function formatK(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
+let activeSpendIdx=null;
+function openSpendModal(idx,date) {
+  activeSpendIdx=idx;
+  document.getElementById('spendModalTitle').textContent='Day '+(idx+1)+' — '+date.toLocaleDateString('en-NG',{weekday:'short',day:'numeric',month:'short'});
+  renderSpendModalEntries();
+  document.getElementById('visionModal').classList.remove('open');
+  document.getElementById('spendModal').classList.add('open');
+}
+function closeSpendModal(){document.getElementById('spendModal').classList.remove('open');}
+function renderSpendModalEntries(){
+  const entries=spendData['day-'+activeSpendIdx]||[];
+  const el=document.getElementById('spendModalEntries');
+  if(!entries.length){el.innerHTML='<div class="empty">No entries yet.</div>';return;}
+  const total=entries.reduce((a,b)=>a+b.amt,0);
+  el.innerHTML=entries.map(e=>`<div class="tx-item"><div class="tx-label">${e.desc}</div><div class="tx-amount exp">₦${e.amt.toLocaleString()}</div></div>`).join('')+
+    `<div style="font-weight:600;font-size:13px;padding:8px 0;border-top:1px solid var(--border);color:var(--ember);">Total: ₦${total.toLocaleString()}</div>`;
+}
+function saveSpendEntry(){
+  const desc=document.getElementById('spendModalDesc').value.trim();
+  const amt=parseFloat(document.getElementById('spendModalAmt').value);
+  if(!desc||isNaN(amt)||amt<=0)return;
+  const key='day-'+activeSpendIdx;
+  if(!spendData[key])spendData[key]=[];
+  spendData[key].push({desc,amt});
+  S.set('spendData',spendData);
+  document.getElementById('spendModalDesc').value=''; document.getElementById('spendModalAmt').value='';
+  renderSpendModalEntries(); renderSpendCalendar();
+}
+
+// BREAKTHROUGH
+function renderBreakthrough() {
+  const el=document.getElementById('breakthroughList');
+  el.innerHTML=breakthroughSteps.map(s=>`<div class="step-item ${s.done?'done-step':''}" onclick="toggleStep(${s.id})">
+    <div class="step-num">${s.done?'✓':s.id}</div>
+    <div><div class="step-text">${s.text}</div>${s.ref?`<div class="step-ref">${s.ref}</div>`:''}</div>
+  </div>`).join('');
+}
+function toggleStep(id){
+  const s=breakthroughSteps.find(x=>x.id===id); if(s)s.done=!s.done;
+  S.set('breakthroughSteps',breakthroughSteps); renderBreakthrough();
+}
+
+// SKILL CHECKS
+function renderSkillChecks(){
+  const stages={excel:'excelChecks',sql:'sqlChecks',python:'pyChecks',powerbi:'biChecks',portfolio:'portChecks'};
+  Object.keys(stages).forEach(stage=>{
+    const el=document.getElementById(stages[stage]);
+    const checks=skillChecks[stage]||[];
+    el.innerHTML=checks.map(c=>`<li class="check-item ${c.done?'done':''}" onclick="toggleSkillCheck('${stage}','${c.id}')"><div class="check-box">${c.done?'✓':''}</div><span class="check-label">${c.label}</span></li>`).join('');
+  });
+  // update SQL progress bar
+  const sqlDone=skillChecks.sql.filter(c=>c.done).length;
+  const sqlPct=Math.round((sqlDone/skillChecks.sql.length)*100);
+  document.getElementById('sqlBar').style.width=sqlPct+'%';
+  document.getElementById('sqlPct').textContent=sqlPct+'% complete';
+}
+function toggleSkillCheck(stage,id){
+  const c=skillChecks[stage].find(x=>x.id===id); if(c)c.done=!c.done;
+  S.set('skillChecks',skillChecks); renderSkillChecks(); renderScore();
+}
+function saveSkillNotes(){
+  skillNotes=document.getElementById('skillNotes').value;
+  S.set('skillNotes',skillNotes);
+}
+
+// REACHCARE
+function addRCWin(){
+  const w=document.getElementById('rcWin').value.trim(); if(!w)return;
+  rcWins.unshift({text:w,date:new Date().toLocaleDateString('en-NG')});
+  S.set('rcWins',rcWins);
+  document.getElementById('rcWin').value='';
+  renderRCWins();
+}
+function renderRCWins(){
+  const el=document.getElementById('rcWinList');
+  if(!rcWins.length){el.innerHTML='<div class="empty">Log your first ReachCare win this week.</div>';return;}
+  el.innerHTML=rcWins.slice(0,8).map(w=>`<div class="prayer-entry"><div class="prayer-date">🏥 ${w.date}</div><div class="prayer-body">${w.text}</div></div>`).join('');
+}
+function renderRCComponents(){
+  const el=document.getElementById('rcComponents');
+  el.innerHTML=rcComponents.map(c=>`<li class="check-item ${c.done?'done':''}" onclick="toggleRC(${c.id})"><div class="check-box">${c.done?'✓':''}</div><span class="check-label">${c.label}</span></li>`).join('');
+}
+function toggleRC(id){
+  const c=rcComponents.find(x=>x.id===id); if(c)c.done=!c.done;
+  S.set('rcComponents',rcComponents); renderRCComponents();
+}
+function saveRCFocus(){
+  rcFocus=document.getElementById('rcFocus').value;
+  S.set('rcFocus',rcFocus);
+  const el=document.getElementById('rcFocusSaved');
+  el.style.display='inline'; setTimeout(()=>el.style.display='none',2000);
+}
+
+// VISION
+function renderVisions(){
+  document.getElementById('visionGrid').innerHTML=visions.map(v=>`<div class="vision-card ${v.done?'achieved':''}" onclick="toggleVision(${v.id})"><div class="vc-icon">${v.icon}</div><div class="vc-title">${v.title}</div><div class="vc-desc">${v.desc}</div></div>`).join('');
+}
+function toggleVision(id){
+  const v=visions.find(x=>x.id===id); if(v)v.done=!v.done;
+  S.set('visions',visions); renderVisions();
+}
+function openVisionModal(){document.getElementById('visionModal').classList.add('open');}
+function closeVisionModal(){document.getElementById('visionModal').classList.remove('open');}
+function saveVision(){
+  const title=document.getElementById('vGoalTitle').value.trim();
+  const icon=document.getElementById('vGoalIcon').value.trim()||'⭐';
+  const desc=document.getElementById('vGoalDesc').value.trim();
+  if(!title)return;
+  visions.push({id:Date.now(),icon,title,desc,done:false});
+  S.set('visions',visions); renderVisions(); closeVisionModal();
+  document.getElementById('vGoalTitle').value=''; document.getElementById('vGoalIcon').value=''; document.getElementById('vGoalDesc').value='';
+}
+function saveBizNotes(){
+  bizNotes=document.getElementById('bizNotes').value; S.set('bizNotes',bizNotes);
+}
+
+// STREAK
+function markCheckin(){
+  const today=new Date().toDateString();
+  if(streakData.lastDate===today){alert('Already checked in today! Come back tomorrow. 🔥');return;}
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  streakData.streak=(streakData.lastDate===yesterday)?streakData.streak+1:1;
+  streakData.lastDate=today;
+  S.set('streakData',streakData);
+  document.getElementById('streakCount').textContent=streakData.streak;
+  alert(`Day ${streakData.streak} checked in! Keep the fire burning. 🔥`);
+}
+
+// SCORE
+function renderScore(){
+  const total=habits.length;
+  const done=habits.filter(h=>h.done).length;
+  const pct=total?Math.round((done/total)*100):0;
+  const offset=339-(339*pct/100);
+  document.getElementById('scoreArc').style.strokeDashoffset=offset;
+  document.getElementById('scoreVal').textContent=pct+'%';
+  document.getElementById('habitsDone').textContent=done+'/'+total;
+  const faith=habits.filter(h=>h.cat==='faith');
+  document.getElementById('faithDone').textContent=faith.filter(h=>h.done).length+'/'+faith.length;
+  const data=habits.filter(h=>h.cat==='data');
+  document.getElementById('dataDone').textContent=data.filter(h=>h.done).length+'/'+data.length;
+}
+</script>
+
+</body>
+</html>
